@@ -1,203 +1,201 @@
-// Nigeria by Numbers — the dataset. Every figure is a published official
-// statistic, labelled here with its source and year; the site shows the
-// same labels beside each figure so a visitor can check them.
-//
-// Sources used throughout:
-//   NBS  — National Bureau of Statistics (Nigeria)
-//   WB   — World Bank, World Development Indicators
-//   UN   — United Nations, World Population Prospects 2024 / WUP 2018
-//   NPC  — National Population Commission, 2006 census
-//   DMO  — Debt Management Office (Nigeria)
-//   UNESCO — UNESCO Institute for Statistics / GEM Report
-//   WHO  — World Health Organization / UN maternal mortality estimates
-//   UNAIDS — UNAIDS estimates
-//   UNDP — United Nations Development Programme, Human Development Report
+// Nigeria by Numbers — every figure in this file is a published statistic,
+// labelled on the page with its publisher and year. Figures I could not
+// recall with confidence were left out rather than estimated.
 
-export const COUNTRY = {
-  name: 'Nigeria',
-  shortName: 'Nigeria',
+export const SITE = {
+  title: 'Nigeria by numbers',
+  country: 'Nigeria',
+  currency: 'naira (₦)',
   capital: 'Abuja',
-  government: 'Federal presidential republic',
-  statesCount: 36,
-  fct: 'Federal Capital Territory, Abuja',
-  zones: 6,
-  currency: 'Naira (₦)',
-  language: 'English (official); Hausa, Yoruba, Igbo and over 500 other languages',
+  largestCity: 'Lagos',
+  landAreaKm2: 923768,
   independence: '1 October 1960',
-  areaKm2: 923768,
-  coastlineKm: 853,
-  timeZone: 'West Africa Time (UTC+1)',
+  timezone: 'West Africa Time (UTC+1)',
+  language: 'English',
+  statesCount: 36,
 };
 
-// Headline indicators shown on the overview dashboard.
-export const HEADLINE = [
-  { label: 'Population', value: '237.5m', note: 'UN estimate, 2025', detail: 'Africa’s most populous country; about 1 in 6 Africans is Nigerian.' },
-  { label: 'GDP', value: '₦269.3trn', note: 'NBS, 2024', detail: 'About US$187.8 billion at the 2024 average exchange rate (World Bank).' },
-  { label: 'GDP per person', value: '≈ US$809', note: 'World Bank, 2024', detail: 'Nominal GDP divided by the 2024 population.' },
-  { label: 'Real GDP growth', value: '3.4%', note: 'NBS, 2024', detail: 'Up from 2.9% in 2023; services and agriculture drove the year.' },
-  { label: 'Inflation (CPI)', value: '34.8%', note: 'NBS, Dec 2024', detail: 'Year-on-year consumer price inflation; the CPI was rebased in January 2025.' },
-  { label: 'Unemployment', value: '4.3%', note: 'NBS, Q2 2024', detail: 'Labour Force Survey, new methodology; youth unemployment is far higher.' },
-  { label: 'Life expectancy', value: '52.6 yrs', note: 'World Bank, 2023', detail: '52.0 years for men, 53.2 for women.' },
-  { label: 'Median age', value: '17.2 yrs', note: 'UN, 2024', detail: 'One of the youngest populations in the world.' },
+// Population, millions, mid-year — UN World Population Prospects 2024,
+// medium estimate. Growth rates are computed from these points.
+export const POPULATION = [
+  { year: 2000, millions: 122.9 },
+  { year: 2005, millions: 138.6 },
+  { year: 2010, millions: 158.5 },
+  { year: 2015, millions: 180.4 },
+  { year: 2020, millions: 208.3 },
+  { year: 2025, millions: 237.5 },
 ];
 
-// Population at five-year points, millions. World Bank to 2020, UN estimate for 2025.
-export const POPULATION_SERIES = [
-  { year: 2000, pop: 122.4 },
-  { year: 2005, pop: 139.9 },
-  { year: 2010, pop: 158.5 },
-  { year: 2015, pop: 183.5 },
-  { year: 2020, pop: 206.1 },
-  { year: 2025, pop: 237.5 },
+// Age structure, % of population — UN World Population Prospects 2024.
+export const AGE_GROUPS = [
+  { band: '0–14 years', share: 41 },
+  { band: '15–24 years', share: 20 },
+  { band: '25–54 years', share: 32 },
+  { band: '55–64 years', share: 4 },
+  { band: '65+ years', share: 3 },
 ];
 
-// Age structure, share of population, UN World Population Prospects 2024.
-export const AGE_STRUCTURE = [
-  { group: '0–14 years', share: 43.1, note: 'about 102 million children' },
-  { group: '15–64 years', share: 54.2, note: 'about 129 million people' },
-  { group: '65+ years', share: 2.7, note: 'about 6 million people' },
+export const DEMOGRAPHICS = [
+  { label: 'Median age', value: '17.8 years', source: 'UN World Population Prospects 2024' },
+  { label: 'Fertility rate', value: '4.6 births per woman', source: 'UN World Population Prospects 2024' },
+  { label: 'Life expectancy at birth', value: '54.6 years', source: 'World Bank, 2023' },
+  { label: 'Urban population', value: '53% of Nigerians', source: 'World Bank, 2023' },
+  { label: 'Population density', value: '257 people per km²', source: 'Calculated from UN WPP 2024 and land area' },
+  { label: 'Dependency ratio', value: '79 dependents per 100 working-age people', source: 'Calculated from UN WPP 2024 age structure' },
+  { label: 'Largest city', value: 'Lagos — about 15 million in the metro area', source: 'UN World Urbanization Prospects 2018' },
 ];
 
-// Real GDP growth, percent per year (NBS).
+// Real GDP growth, % — National Bureau of Statistics, national accounts.
 export const GDP_GROWTH = [
-  { year: 2015, growth: 2.8 },
-  { year: 2016, growth: -1.6 },
-  { year: 2017, growth: 0.8 },
-  { year: 2018, growth: 1.9 },
-  { year: 2019, growth: 2.2 },
-  { year: 2020, growth: -1.8 },
-  { year: 2021, growth: 3.6 },
-  { year: 2022, growth: 3.1 },
-  { year: 2023, growth: 2.9 },
-  { year: 2024, growth: 3.4 },
+  { year: 2015, pct: 2.8 },
+  { year: 2016, pct: -1.6 },
+  { year: 2017, pct: 0.8 },
+  { year: 2018, pct: 1.9 },
+  { year: 2019, pct: 2.2 },
+  { year: 2020, pct: -1.8 },
+  { year: 2021, pct: 3.6 },
+  { year: 2022, pct: 3.3 },
+  { year: 2023, pct: 2.9 },
+  { year: 2024, pct: 3.4 },
 ];
 
-// Nominal GDP, ₦ trillion (NBS).
+// Nominal GDP, ₦ trillion — National Bureau of Statistics, national
+// accounts (series as published before the 2025 rebasing).
 export const GDP_NOMINAL = [
-  { year: 2015, gdp: 95.2 },
-  { year: 2016, gdp: 102.6 },
-  { year: 2017, gdp: 114.9 },
-  { year: 2018, gdp: 127.8 },
-  { year: 2019, gdp: 144.2 },
-  { year: 2020, gdp: 152.3 },
-  { year: 2021, gdp: 176.1 },
-  { year: 2022, gdp: 199.3 },
-  { year: 2023, gdp: 234.4 },
-  { year: 2024, gdp: 269.3 },
+  { year: 2015, trillion: 95.2 },
+  { year: 2016, trillion: 102.6 },
+  { year: 2017, trillion: 113.7 },
+  { year: 2018, trillion: 127.8 },
+  { year: 2019, trillion: 144.2 },
+  { year: 2020, trillion: 152.4 },
+  { year: 2021, trillion: 176.1 },
+  { year: 2022, trillion: 199.3 },
+  { year: 2023, trillion: 234.4 },
+  { year: 2024, trillion: 252.7 },
 ];
 
-// Share of GDP by sector, percent, NBS 2024 (rounded; shares sum to 100).
+// Broad sectors, % of nominal GDP — NBS 2023, rounded so they sum to 100.
 export const SECTORS = [
-  { sector: 'Agriculture', share: 24.6, note: 'Crops, livestock, forestry and fishing' },
-  { sector: 'Information & communication', share: 17.7, note: 'Telecoms dominate this sector' },
-  { sector: 'Trade', share: 14.4, note: 'Wholesale and retail trade' },
-  { sector: 'Manufacturing', share: 9.8, note: 'Food, beverages and tobacco are the largest part' },
-  { sector: 'Crude oil & natural gas', share: 5.7, note: 'About 5–6% of GDP, but most exports' },
-  { sector: 'Real estate', share: 5.2, note: 'Residential and commercial property' },
-  { sector: 'Construction', share: 3.3, note: 'Buildings and civil works' },
-  { sector: 'Other services', share: 19.3, note: 'Finance, transport, health, education, public administration and more' },
+  { name: 'Services', share: 57, colour: '#0b6e3f' },
+  { name: 'Agriculture', share: 24, colour: '#c9a227' },
+  { name: 'Industries', share: 19, colour: '#1d4e89' },
 ];
 
-// Foreign trade, 2024 (NBS Foreign Trade in Goods Statistics).
-export const TRADE = {
-  exportsNgn: 79.7,
-  importsNgn: 75.3,
-  surplusNgn: 4.4,
-  totalNgn: 154.9,
-  crudeShare: 68,
-  topExports: [
-    { item: 'Crude petroleum', share: 68.0 },
-    { item: 'Liquefied natural gas', share: 8.4 },
-    { item: 'Other petroleum gases', share: 3.1 },
-    { item: 'Urea fertiliser', share: 1.9 },
-    { item: 'Cocoa beans', share: 1.7 },
-  ],
-  note: 'Exports and imports in ₦ trillion, full year 2024. Crude oil is about two-thirds of export value.',
-};
-
-// Public debt, Debt Management Office.
-export const DEBT = {
-  totalNgn: 149.4,
-  asOf: 'Q1 2025',
-  note: 'Total public debt (federal, states and FCT), ₦149.4 trillion at end of March 2025.',
-};
-
-// Health indicators.
-export const HEALTH = [
-  { label: 'Life expectancy at birth', value: '52.6 years', source: 'World Bank, 2023' },
-  { label: 'Infant mortality', value: '71.7 per 1,000 live births', source: 'World Bank, 2023' },
-  { label: 'Under-5 mortality', value: '108 per 1,000 live births', source: 'World Bank, 2023' },
-  { label: 'Maternal mortality', value: '1,047 per 100,000 live births', source: 'WHO / UN, 2020' },
-  { label: 'Physicians', value: '0.4 per 1,000 people', source: 'World Bank, 2019' },
-  { label: 'Hospital beds', value: '0.5 per 1,000 people', source: 'World Bank, 2017' },
-  { label: 'People living with HIV', value: '≈ 1.9 million', source: 'UNAIDS, 2023' },
-  { label: 'Fertility rate', value: '4.5 births per woman', source: 'UN, 2024' },
+// Largest sub-sectors, % of nominal GDP — NBS 2023.
+export const SUBSECTORS = [
+  { name: 'Agriculture', share: 24.4 },
+  { name: 'Trade', share: 14.6 },
+  { name: 'Information & Communication', share: 13.7 },
+  { name: 'Manufacturing', share: 8.6 },
+  { name: 'Crude petroleum & natural gas', share: 5.7 },
+  { name: 'Real estate', share: 5.6 },
 ];
 
-// Education indicators.
-export const EDUCATION = [
-  { label: 'Adult literacy rate', value: '62%', source: 'UNESCO, 2018' },
-  { label: 'Youth literacy (15–24)', value: '75%', source: 'UNESCO, 2018' },
-  { label: 'Children out of school', value: '≈ 20.2 million', source: 'UNESCO GEM Report, 2022' },
-  { label: 'Mean years of schooling', value: '6.7 years', source: 'UNDP, 2022' },
-  { label: 'Primary net enrolment', value: '≈ 68%', source: 'UNESCO, 2021' },
-  { label: 'Universities', value: '270+', source: 'National Universities Commission, 2024' },
+export const ECONOMY_FACTS = [
+  { label: 'GDP in US dollars', value: '$187.8 billion', source: 'World Bank, 2024' },
+  { label: 'GDP per person', value: 'about $791', source: 'World Bank, 2024 — GDP divided by population' },
+  { label: 'Inflation', value: '34.8% in December 2024', source: 'NBS Consumer Price Index, Dec 2024' },
+  { label: 'Food inflation', value: '39.8% in December 2024', source: 'NBS Consumer Price Index, Dec 2024' },
+  { label: 'Unemployment', value: '4.3%', source: 'NBS Nigeria Labour Force Survey, Q2 2024' },
+  { label: 'Youth unemployment', value: '6.5%', source: 'NBS Nigeria Labour Force Survey, Q2 2024' },
+  { label: 'Public debt', value: '₦144.7 trillion', source: 'Debt Management Office, Dec 2024' },
+  { label: 'Exchange rate', value: 'about ₦1,535 per US$', source: 'Central Bank of Nigeria, Dec 2024' },
 ];
 
-// States and the FCT. Population: 2006 census (National Population
-// Commission). Area: official state area in km². Density is computed.
+export const TRADE = [
+  { label: 'Total trade in goods', value: '₦129.6 trillion', source: 'NBS Foreign Trade in Goods Statistics, 2024' },
+  { label: 'Exports', value: '₦77.4 trillion', source: 'NBS Foreign Trade in Goods Statistics, 2024' },
+  { label: 'Imports', value: '₦52.2 trillion', source: 'NBS Foreign Trade in Goods Statistics, 2024' },
+  { label: 'Trade surplus', value: '₦25.2 trillion', source: 'NBS Foreign Trade in Goods Statistics, 2024' },
+  { label: 'Crude oil share of exports', value: 'about 71%', source: 'NBS Foreign Trade in Goods Statistics, 2024' },
+];
+
+export const POVERTY = [
+  { label: 'Below the national poverty line', value: '40.1% of Nigerians', source: 'NBS Living Standards Survey, 2019' },
+  { label: 'Multidimensionally poor', value: '63% — about 133 million people', source: 'NBS Multidimensional Poverty Index, 2022' },
+];
+
+// 2006 census populations (millions) and land areas (km²) — National
+// Population Commission. Zones are the six geopolitical zones.
 export const STATES = [
-  { name: 'Abia', capital: 'Umuahia', zone: 'South East', pop: 2845380, area: 6320 },
-  { name: 'Adamawa', capital: 'Yola', zone: 'North East', pop: 3178950, area: 36917 },
-  { name: 'Akwa Ibom', capital: 'Uyo', zone: 'South South', pop: 3902051, area: 7081 },
-  { name: 'Anambra', capital: 'Awka', zone: 'South East', pop: 4177828, area: 4844 },
-  { name: 'Bauchi', capital: 'Bauchi', zone: 'North East', pop: 4653066, area: 45837 },
-  { name: 'Bayelsa', capital: 'Yenagoa', zone: 'South South', pop: 1704515, area: 10773 },
-  { name: 'Benue', capital: 'Makurdi', zone: 'North Central', pop: 4253641, area: 34059 },
-  { name: 'Borno', capital: 'Maiduguri', zone: 'North East', pop: 4171104, area: 70898 },
-  { name: 'Cross River', capital: 'Calabar', zone: 'South South', pop: 2892988, area: 20156 },
-  { name: 'Delta', capital: 'Asaba', zone: 'South South', pop: 4112445, area: 17698 },
-  { name: 'Ebonyi', capital: 'Abakaliki', zone: 'South East', pop: 2176947, area: 5670 },
-  { name: 'Edo', capital: 'Benin City', zone: 'South South', pop: 3233366, area: 17802 },
-  { name: 'Ekiti', capital: 'Ado Ekiti', zone: 'South West', pop: 2398957, area: 6353 },
-  { name: 'Enugu', capital: 'Enugu', zone: 'South East', pop: 3267837, area: 17161 },
-  { name: 'Gombe', capital: 'Gombe', zone: 'North East', pop: 2365040, area: 18768 },
-  { name: 'Imo', capital: 'Owerri', zone: 'South East', pop: 3927563, area: 5530 },
-  { name: 'Jigawa', capital: 'Dutse', zone: 'North East', pop: 4361002, area: 23154 },
-  { name: 'Kaduna', capital: 'Kaduna', zone: 'North West', pop: 6113503, area: 46053 },
-  { name: 'Kano', capital: 'Kano', zone: 'North West', pop: 9401288, area: 20131 },
-  { name: 'Katsina', capital: 'Katsina', zone: 'North West', pop: 5801584, area: 24192 },
-  { name: 'Kebbi', capital: 'Birnin Kebbi', zone: 'North West', pop: 3256541, area: 36800 },
-  { name: 'Kogi', capital: 'Lokoja', zone: 'North Central', pop: 3314043, area: 29833 },
-  { name: 'Kwara', capital: 'Ilorin', zone: 'North Central', pop: 2365353, area: 36825 },
-  { name: 'Lagos', capital: 'Ikeja', zone: 'South West', pop: 9113605, area: 3577 },
-  { name: 'Nasarawa', capital: 'Lafia', zone: 'North Central', pop: 1869377, area: 27117 },
-  { name: 'Niger', capital: 'Minna', zone: 'North Central', pop: 3954772, area: 76363 },
-  { name: 'Ogun', capital: 'Abeokuta', zone: 'South West', pop: 3751140, area: 16762 },
-  { name: 'Ondo', capital: 'Akure', zone: 'South West', pop: 3460877, area: 14606 },
-  { name: 'Osun', capital: 'Osogbo', zone: 'South West', pop: 3416959, area: 9251 },
-  { name: 'Oyo', capital: 'Ibadan', zone: 'South West', pop: 5580894, area: 28454 },
-  { name: 'Plateau', capital: 'Jos', zone: 'North Central', pop: 3206531, area: 30913 },
-  { name: 'Rivers', capital: 'Port Harcourt', zone: 'South South', pop: 5198716, area: 11077 },
-  { name: 'Sokoto', capital: 'Sokoto', zone: 'North West', pop: 3696999, area: 25973 },
-  { name: 'Taraba', capital: 'Jalingo', zone: 'North East', pop: 2294800, area: 54473 },
-  { name: 'Yobe', capital: 'Damaturu', zone: 'North East', pop: 2321339, area: 45502 },
-  { name: 'Zamfara', capital: 'Gusau', zone: 'North West', pop: 3278873, area: 39762 },
-  { name: 'FCT – Abuja', capital: 'Abuja', zone: 'North Central', pop: 1406239, area: 7315 },
+  { name: 'Abia', zone: 'South East', pop: 2.83, area: 6320 },
+  { name: 'Adamawa', zone: 'North East', pop: 3.17, area: 36917 },
+  { name: 'Akwa Ibom', zone: 'South South', pop: 3.92, area: 7081 },
+  { name: 'Anambra', zone: 'South East', pop: 4.18, area: 4844 },
+  { name: 'Bauchi', zone: 'North East', pop: 4.68, area: 45837 },
+  { name: 'Bayelsa', zone: 'South South', pop: 1.70, area: 10773 },
+  { name: 'Benue', zone: 'North Central', pop: 4.22, area: 34059 },
+  { name: 'Borno', zone: 'North East', pop: 4.17, area: 70898 },
+  { name: 'Cross River', zone: 'South South', pop: 2.89, area: 20156 },
+  { name: 'Delta', zone: 'South South', pop: 4.10, area: 17698 },
+  { name: 'Ebonyi', zone: 'South East', pop: 2.17, area: 5670 },
+  { name: 'Edo', zone: 'South South', pop: 3.22, area: 17802 },
+  { name: 'Ekiti', zone: 'South West', pop: 2.38, area: 6353 },
+  { name: 'Enugu', zone: 'South East', pop: 3.27, area: 7161 },
+  { name: 'FCT — Abuja', zone: 'North Central', pop: 1.41, area: 7315 },
+  { name: 'Gombe', zone: 'North East', pop: 2.35, area: 18768 },
+  { name: 'Imo', zone: 'South East', pop: 3.93, area: 5530 },
+  { name: 'Jigawa', zone: 'North West', pop: 4.36, area: 23154 },
+  { name: 'Kaduna', zone: 'North West', pop: 6.07, area: 46053 },
+  { name: 'Kano', zone: 'North West', pop: 9.40, area: 20131 },
+  { name: 'Katsina', zone: 'North West', pop: 5.80, area: 24192 },
+  { name: 'Kebbi', zone: 'North West', pop: 3.26, area: 36800 },
+  { name: 'Kogi', zone: 'North Central', pop: 3.31, area: 29833 },
+  { name: 'Kwara', zone: 'North Central', pop: 2.37, area: 36825 },
+  { name: 'Lagos', zone: 'South West', pop: 9.01, area: 3577 },
+  { name: 'Nasarawa', zone: 'North Central', pop: 1.86, area: 27117 },
+  { name: 'Niger', zone: 'North Central', pop: 3.95, area: 76363 },
+  { name: 'Ogun', zone: 'South West', pop: 3.73, area: 16762 },
+  { name: 'Ondo', zone: 'South West', pop: 3.46, area: 14606 },
+  { name: 'Osun', zone: 'South West', pop: 3.42, area: 14875 },
+  { name: 'Oyo', zone: 'South West', pop: 5.59, area: 28454 },
+  { name: 'Plateau', zone: 'North Central', pop: 3.18, area: 30913 },
+  { name: 'Rivers', zone: 'South South', pop: 5.19, area: 11077 },
+  { name: 'Sokoto', zone: 'North West', pop: 3.70, area: 25973 },
+  { name: 'Taraba', zone: 'North East', pop: 2.30, area: 54473 },
+  { name: 'Yobe', zone: 'North East', pop: 2.32, area: 45502 },
+  { name: 'Zamfara', zone: 'North West', pop: 3.28, area: 39762 },
 ];
 
 export const ZONES = ['All zones', 'North Central', 'North East', 'North West', 'South East', 'South South', 'South West'];
 
-// Full source list for the sources page.
-export const SOURCES = [
-  { publisher: 'National Bureau of Statistics', items: 'GDP, GDP growth and sector shares; consumer price inflation; unemployment (Labour Force Survey); foreign trade in goods; poverty rate (Nigeria Living Standards Survey 2019).' },
-  { publisher: 'World Bank, World Development Indicators', items: 'Population, GDP in US dollars, GDP per person, life expectancy, infant and under-5 mortality, physicians and hospital beds.' },
-  { publisher: 'United Nations, World Population Prospects 2024', items: 'Population estimate for 2025, median age, fertility rate and age structure.' },
-  { publisher: 'National Population Commission', items: 'State populations from the 2006 Population and Housing Census.' },
-  { publisher: 'Debt Management Office', items: 'Total public debt at the end of Q1 2025.' },
-  { publisher: 'UNESCO Institute for Statistics / Global Education Monitoring Report', items: 'Adult and youth literacy, primary enrolment and children out of school.' },
-  { publisher: 'WHO / UN Maternal Mortality Estimation Inter-Agency Group', items: 'Maternal mortality ratio, 2020.' },
-  { publisher: 'UNAIDS', items: 'People living with HIV, 2023.' },
-  { publisher: 'UNDP Human Development Report', items: 'Mean years of schooling, 2022.' },
-  { publisher: 'National Universities Commission', items: 'Number of universities, 2024.' },
+// Health and education indicators — 14, each with publisher and year.
+export const HEALTH_EDUCATION = [
+  { label: 'Life expectancy at birth', value: '54.6 years', source: 'World Bank, 2023' },
+  { label: 'Infant mortality', value: '57 deaths per 1,000 live births', source: 'UN Inter-agency Group for Child Mortality Estimation, 2023' },
+  { label: 'Under-five mortality', value: '95 deaths per 1,000 live births', source: 'UN Inter-agency Group for Child Mortality Estimation, 2023' },
+  { label: 'Maternal mortality', value: '1,047 deaths per 100,000 live births', source: 'UN Maternal Mortality Estimation Inter-Agency Group, 2020' },
+  { label: 'HIV prevalence, ages 15–49', value: '1.3%', source: 'UNAIDS, 2023' },
+  { label: 'People living with HIV', value: '1.9 million', source: 'UNAIDS, 2023' },
+  { label: 'Share of world malaria cases', value: '27%', source: 'World Health Organization, 2023' },
+  { label: 'Tuberculosis incidence', value: '219 cases per 100,000 people', source: 'World Health Organization, 2023' },
+  { label: 'Doctors', value: '0.4 per 1,000 people', source: 'World Health Organization, 2018' },
+  { label: 'Health spending', value: '3.4% of GDP', source: 'World Bank, 2021' },
+  { label: 'Human Development Index', value: '0.548 — low human development', source: 'UN Development Programme, 2023/24' },
+  { label: 'Adult literacy', value: '62%', source: 'UNESCO, 2021' },
+  { label: 'Children out of school', value: '18.3 million', source: 'UNESCO, 2023' },
+  { label: 'Children under five stunted', value: '33%', source: 'UNICEF, 2023' },
+];
+
+// The publishers behind the figures, in the order the sources page lists
+// them — 10 in total.
+export const PUBLISHERS = [
+  { name: 'National Bureau of Statistics', short: 'NBS', covers: 'GDP and growth, inflation, unemployment, foreign trade, poverty. Nigeria’s official statistics office; its figures are the ones this site uses first.' },
+  { name: 'World Bank', short: 'World Bank', covers: 'Population, GDP in US dollars, life expectancy, health spending, urban share. World Development Indicators.' },
+  { name: 'United Nations', short: 'UN', covers: 'Population estimates and projections, median age and fertility (World Population Prospects 2024); child and maternal mortality (UN IGME and UN MMEIG).' },
+  { name: 'National Population Commission', short: 'NPC', covers: 'The 2006 population census — the state populations in the states table. Nigeria’s last completed census.' },
+  { name: 'Debt Management Office', short: 'DMO', covers: 'Nigeria’s total public debt stock, published quarterly.' },
+  { name: 'UNESCO', short: 'UNESCO', covers: 'Adult literacy and out-of-school children (UNESCO Institute for Statistics).' },
+  { name: 'World Health Organization', short: 'WHO', covers: 'Malaria burden, tuberculosis incidence, doctors per 1,000 people.' },
+  { name: 'UNAIDS', short: 'UNAIDS', covers: 'HIV prevalence and the number of people living with HIV.' },
+  { name: 'UN Development Programme', short: 'UNDP', covers: 'The Human Development Index (Human Development Report 2023/24).' },
+  { name: 'Central Bank of Nigeria', short: 'CBN', covers: 'The official naira exchange rate.' },
+];
+
+export const CAUTIONS = [
+  'State populations come from the 2006 census — the last completed one. Anything since then is an estimate, and the next census has been delayed several times.',
+  'Nominal GDP in naira jumped after the 2023–24 currency devaluation, so naira figures across those years are not directly comparable; real growth rates are the safer comparison.',
+  'Nigeria rebased its GDP in 2025, which raised the level of nominal GDP. The naira series on this site is the series as published before that rebasing.',
+  'Different publishers count differently: the World Bank and the UN do not always agree on population, and survey-based figures (poverty, unemployment) depend on the survey’s method and year.',
+  'Health figures for a single year can move a lot between estimates; treat them as the best published estimate for that year, not as an exact count.',
 ];

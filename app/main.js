@@ -1,163 +1,115 @@
-// Router and interactions. Hash routes only, no network: every page is
-// rendered from the data in data.js, and every control on a page works.
+// Hash router and control wiring for Nigeria by Numbers.
+// Routes: #/ overview, #/population, #/economy, #/states,
+// #/health-education, #/sources. Anything else is the not-found page.
 
-import { GDP_GROWTH, GDP_NOMINAL, POPULATION_SERIES, STATES } from './data.js';
-import { barChart, fmt, lineChart } from './charts.js';
-import { economy, healthEducation, missing, overview, population, sources, statesTable } from './views.js';
+import { economyView, healthView, notFoundView, overviewView, populationView, sourcesView, statesView } from './views.js';
+
+const NAV = [
+  { path: '#/', label: 'Overview' },
+  { path: '#/population', label: 'Population' },
+  { path: '#/economy', label: 'Economy' },
+  { path: '#/states', label: 'States' },
+  { path: '#/health-education', label: 'Health & Education' },
+  { path: '#/sources', label: 'Sources' },
+];
+
+// Page state that survives re-renders: the two chart toggles and the
+// states table's sort, zone filter and search text.
+const pageState = {
+  popMode: 'total',
+  gdpMode: 'nominal',
+  states: { sort: 'population', zone: 'All zones', query: '' },
+};
 
 const app = document.getElementById('app');
+const nav = document.getElementById('main-nav');
 
-const ROUTES = {
-  '/': overview,
-  '/population': population,
-  '/economy': economy,
-  '/states': statesTable,
-  '/health-education': healthEducation,
-  '/sources': sources,
-};
+function navHtml(activePath) {
+  return NAV.map((item) => {
+    const active = item.path === activePath ? ' aria-current="page"' : '';
+    return `<a href="${item.path}"${active}>${item.label}</a>`;
+  }).join('');
+}
 
 function route() {
   const hash = window.location.hash || '#/';
-  const path = hash.slice(1).split('?')[0] || '/';
-  const render = ROUTES[path] || missing;
-  app.innerHTML = render();
-  document.querySelectorAll('nav a').forEach((a) => {
-    a.classList.toggle('is-active', a.getAttribute('href') === `#${path}`);
-  });
-  if (path === '/states') initStatesTable();
-  if (path === '/population') initPopToggle();
-  if (path === '/economy') initGdpToggle();
-  window.scrollTo(0, 0);
+  const path = hash.replace(/^#/, '') || '/';
+  if (path === '/' || path === '') return { name: 'overview', html: overviewView() };
+  if (path === '/population') return { name: 'population', html: populationView(pageState.popMode) };
+  if (path === '/economy') return { name: 'economy', html: economyView(pageState.gdpMode) };
+  if (path === '/states') return { name: 'states', html: statesView(pageState.states) };
+  if (path === '/health-education') return { name: 'health', html: healthView() };
+  if (path === '/sources') return { name: 'sources', html: sourcesView() };
+  return { name: 'notfound', html: notFoundView() };
+}
+
+function activeNavPath(path) {
+  const found = NAV.find((item) => item.path === `#${path}`);
+  return found ? found.path : '#/';
+}
+
+function render() {
+  const { name, html } = route();
+  const path = (window.location.hash || '#/').replace(/^#/, '') || '/';
+  app.innerHTML = html;
+  nav.innerHTML = navHtml(activeNavPath(path));
+  const titles = {
+    overview: 'Overview',
+    population: 'Population & demographics',
+    economy: 'Economy',
+    states: 'States & regions',
+    health: 'Health & education',
+    sources: 'Sources & methods',
+    notfound: 'Page not found',
+  };
+  document.title = `Nigeria by numbers — ${titles[name] ?? 'Nigeria'}`;
   window.__shotReady = true;
 }
 
-function popChartData(view) {
-  if (view === 'growth') {
-    return POPULATION_SERIES.slice(1).map((d, i) => ({
-      label: `${POPULATION_SERIES[i].year}–${d.year}`,
-      value: Math.round(((d.pop - POPULATION_SERIES[i].pop) / POPULATION_SERIES[i].pop) * 1000) / 10,
-    }));
-  }
-  return POPULATION_SERIES.map((d) => ({ label: String(d.year), value: d.pop }));
-}
-
-function initPopToggle() {
-  const chart = document.getElementById('pop-chart');
-  if (!chart) return;
-  document.querySelectorAll('[data-pop-view]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('[data-pop-view]').forEach((b) => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      const view = btn.getAttribute('data-pop-view');
-      chart.innerHTML = view === 'growth'
-        ? barChart(popChartData('growth'), { format: (v) => `${v}%`, color: '#c9a227' })
-        : barChart(popChartData('total'), { format: (v) => `${v}m` });
-    });
-  });
-}
-
-function initGdpToggle() {
-  const chart = document.getElementById('gdp-chart');
-  if (!chart) return;
-  document.querySelectorAll('[data-gdp-view]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('[data-gdp-view]').forEach((b) => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      const view = btn.getAttribute('data-gdp-view');
-      if (view === 'growth') {
-        const data = GDP_GROWTH.map((d) => ({ label: String(d.year).slice(2), value: d.growth }));
-        chart.innerHTML = lineChart(data, { format: (v) => `${v}%` });
-      } else {
-        const data = GDP_NOMINAL.map((d) => ({ label: String(d.year).slice(2), value: d.gdp }));
-        chart.innerHTML = barChart(data, { format: (v) => `₦${v}trn` });
-      }
-    });
-  });
-}
-
-// States table: sortable columns, zone filter buttons, live search.
-function initStatesTable() {
-  const tbody = document.querySelector('#states-table tbody');
-  const search = document.getElementById('state-search');
-  const count = document.getElementById('state-count');
-  if (!tbody || !search || !count) return;
-
-  const state = { sort: 'pop', dir: 'desc', zone: 'All zones', query: '' };
-
-  function density(s) {
-    return s.pop / s.area;
-  }
-
-  function compare(a, b) {
-    const key = state.sort;
-    let va;
-    let vb;
-    if (key === 'density') {
-      va = density(a);
-      vb = density(b);
-    } else if (key === 'pop' || key === 'area') {
-      va = a[key];
-      vb = b[key];
-    } else {
-      va = a[key].toLowerCase();
-      vb = b[key].toLowerCase();
-    }
-    if (va < vb) return state.dir === 'asc' ? -1 : 1;
-    if (va > vb) return state.dir === 'asc' ? 1 : -1;
-    return 0;
-  }
-
-  function render() {
-    const q = state.query.trim().toLowerCase();
-    const rows = STATES.filter(
-      (s) => (state.zone === 'All zones' || s.zone === state.zone) &&
-        (!q || s.name.toLowerCase().includes(q) || s.capital.toLowerCase().includes(q)),
-    ).sort(compare);
-    tbody.innerHTML = rows
-      .map(
-        (s) => `<tr><td><strong>${s.name}</strong></td><td>${s.capital}</td><td>${s.zone}</td>` +
-          `<td class="num">${fmt(s.pop)}</td><td class="num">${fmt(s.area)}</td>` +
-          `<td class="num">${fmt(Math.round(density(s)))}</td></tr>`,
-      )
-      .join('') || '<tr><td colspan="6">No state matches that search.</td></tr>';
-    count.textContent = `${rows.length} of ${STATES.length} states & FCT`;
-    document.querySelectorAll('#states-table th button').forEach((b) => {
-      const active = b.getAttribute('data-sort') === state.sort;
-      b.classList.toggle('is-sorted', active);
-      b.textContent = b.textContent.replace(/ [▲▼]$/, '');
-      if (active) b.textContent += state.dir === 'asc' ? ' ▲' : ' ▼';
-    });
-  }
-
-  document.querySelectorAll('#states-table th button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const key = btn.getAttribute('data-sort');
-      if (state.sort === key) {
-        state.dir = state.dir === 'asc' ? 'desc' : 'asc';
-      } else {
-        state.sort = key;
-        state.dir = key === 'name' || key === 'capital' || key === 'zone' ? 'asc' : 'desc';
-      }
-      render();
-    });
-  });
-
-  document.querySelectorAll('[data-zone]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('[data-zone]').forEach((b) => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      state.zone = btn.getAttribute('data-zone');
-      render();
-    });
-  });
-
-  search.addEventListener('input', () => {
-    state.query = search.value;
+// One delegated listener for every control the pages render: the two
+// chart toggles, the states sort and zone buttons, and the search box.
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  const popView = button.getAttribute('data-pop-view');
+  if (popView) {
+    pageState.popMode = popView;
     render();
-  });
+    return;
+  }
+  const gdpView = button.getAttribute('data-gdp-view');
+  if (gdpView) {
+    pageState.gdpMode = gdpView;
+    render();
+    return;
+  }
+  const sort = button.getAttribute('data-sort');
+  if (sort) {
+    pageState.states.sort = sort;
+    render();
+    return;
+  }
+  const zone = button.getAttribute('data-zone');
+  if (zone) {
+    pageState.states.zone = zone;
+    render();
+  }
+});
 
-  render();
-}
+document.addEventListener('input', (event) => {
+  if (event.target.id !== 'state-search') return;
+  pageState.states.query = event.target.value;
+  // Re-render only the table and the count, so the search box keeps focus.
+  const html = statesView(pageState.states);
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  const table = temp.querySelector('#states-table');
+  const count = temp.querySelector('#state-count');
+  const liveTable = document.getElementById('states-table');
+  const liveCount = document.getElementById('state-count');
+  if (liveTable && table) liveTable.replaceWith(table);
+  if (liveCount && count) liveCount.replaceWith(count);
+});
 
-window.addEventListener('hashchange', route);
-route();
+window.addEventListener('hashchange', render);
+render();
